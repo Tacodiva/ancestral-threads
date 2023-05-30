@@ -8,8 +8,9 @@ export const eleLoading = document.getElementById("loading")!;
 export const eleMain: SVGSVGElement = document.getElementById("main") as any;
 export const eleMainContent: SVGGElement = document.getElementById("main-content") as any;
 
-export const eleCollageWidth = 4000;
-export const eleCollageHeight = 4000;
+export const eleCollageScaleFactor = 1.2
+export const eleCollageWidth = 3840 * eleCollageScaleFactor;
+export const eleCollageHeight = 2160 * eleCollageScaleFactor;
 
 export const eleCollage = eleMainContent.appendChild(document.createElementNS(SVG_NS, "image"));
 eleCollage.addEventListener("load", (e) => {
@@ -21,11 +22,11 @@ eleCollage.addEventListener("load", (e) => {
         eleThing.classList.add("thing");
         const eleThingTransform = eleMain.createSVGTransform();
         eleThing.transform.baseVal.appendItem(eleThingTransform);
-        eleThingTransform.setTranslate(...thing.pos);
+        eleThingTransform.setTranslate(thing.pos[0] * eleCollageScaleFactor, thing.pos[1] * eleCollageScaleFactor);
 
         const background = eleThing.appendChild(document.createElementNS(SVG_NS, "rect"));
-        background.style.width = "200px";
-        background.style.height = "200px";
+        background.style.width = `${530 * eleCollageScaleFactor}px`;
+        background.style.height = `${630 * eleCollageScaleFactor}px`;
 
         eleThing.addEventListener("click", (e) => {
             showPopup(thing);

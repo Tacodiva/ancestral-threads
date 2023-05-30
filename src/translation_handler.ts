@@ -22,6 +22,15 @@ eleMainContentTranslation.setTranslate(translation.x, translation.y);
 
 var drag: DragInfo | null = null;
 
+window.addEventListener("touchstart", (e) => {
+    if (drag) return;
+    drag = {
+        mouseStart: { x: e.touches[0].pageX, y: e.touches[0].pageY },
+        translationStart: { x: translation.x, y: translation.y }
+    };
+    e.preventDefault();
+});
+
 window.addEventListener("mousedown", (e) => {
     if (drag) return;
     drag = {
@@ -31,11 +40,9 @@ window.addEventListener("mousedown", (e) => {
     e.preventDefault();
 });
 
-window.addEventListener("mousemove", (e) => {
-    if (!drag) return;
-
-    const dx = drag.mouseStart.x - e.x;
-    const dy = drag.mouseStart.y - e.y;
+function move(drag: DragInfo, x: number, y: number) {
+    const dx = drag.mouseStart.x - x;
+    const dy = drag.mouseStart.y - y;
 
     translation = {
         x: drag.translationStart.x - dx,
@@ -53,9 +60,25 @@ window.addEventListener("mousemove", (e) => {
 
     eleMainContentTranslation.setTranslate(translation.x, translation.y);
 
+}
+
+window.addEventListener("mousemove", (e) => {
+    if (e.shiftKey) console.log((e.x - translation.x) + ", " + (e.y - translation.y));
+    if (!drag) return;
+    move(drag, e.x, e.y);
     e.preventDefault();
 });
 
 window.addEventListener("mouseup", (e) => {
+    drag = null;
+});
+
+window.addEventListener("touchmove", (e) => {
+    if (!drag) return;
+    move(drag, e.touches[0].pageX, e.touches[0].pageY);
+    e.preventDefault();
+});
+
+window.addEventListener("touchend", (e) => {
     drag = null;
 });
